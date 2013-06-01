@@ -73,8 +73,18 @@ public class SensorRecordingService extends Service implements SensorEventListen
 	public void onSensorChanged(SensorEvent event) {
 		// TODO Change for actual accelerometer data (with static helper methods)
 //		processSample(event);
-		if(getSensorType(event.sensor) == SENSORTYPE_GYRO){
+		switch(getSensorType(event.sensor)){
+		case SENSORTYPE_ACCEL:
+			for(int i=0; i < accelData.length; i++) 
+				accelData[i] = event.values[i];
+			break;
 			
+		case SENSORTYPE_GYRO:
+			for(int i=0; i < gyroData.length; i++)
+				gyroData[i] = event.values[i];
+			break;
+		default:
+			break;
 		}
 	}
 	

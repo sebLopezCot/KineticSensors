@@ -138,6 +138,8 @@ public class MainActivity extends Activity {
 			yGyroTextView.setText("y: -");
 			zGyroTextView.setText("z: -");
 			
+			recordToggle.setChecked(false); // Fixes bug where toggle button stay on during pause
+			
 			Log.d(TAG, "Stoped Recording"); // Debug
 			
 			// Unbind from (and usually stop) recording service
