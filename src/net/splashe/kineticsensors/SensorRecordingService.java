@@ -44,6 +44,8 @@ public class SensorRecordingService extends Service implements SensorEventListen
 		accelData = new float[3];
 		gyroData = new float[3];
 		angleData = new float[3];
+		previousError = new float[3];
+		errorDerivative = new float[3];
 		
 		sensorMgr = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		accelSensor = sensorMgr.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -112,22 +114,31 @@ public class SensorRecordingService extends Service implements SensorEventListen
 			// Get the change in time to use for integration
 			float dt = (float)(event.timestamp - previousTimestamp) * NS2S;
 
-			float[] gyroInput = new float[3];
-			for(int i=0; i < angleData.length; i++){
-				// Remove noise from samples
-				gyroInput[i] = (float) gyroNoiseLimiter(event.values[i]);
-				
-				// Add the change in angle to angleData by integrating
+			float[] gyroInput = event.values;
+			
+			// Add the change in angle to angleData by integrating
+			for(int i=0; i < angleData.length; i++)
 				angleData[i] += (float) Math.toDegrees(gyroInput[i] * dt);
-				
-				// Bound the angle to 360 degrees
+			
+			// Remove accumulated angle error
+			removeAccumulatedAngleError(angleData, dt);
+			
+			// Bound the angle to 360 degrees
+			for(int i=0; i < angleData.length; i++)
 				angleData[i] = (float) boundTo360Degrees(angleData[i]);
-			}
 		}
 		
 		// Update timestamp
 		previousTimestamp = event.timestamp;
 	}
+	
+	private void removeAccumulatedAngleError(float[] angleInput, float dt){
+		if(calibrated){
+			for(int i=0; i < angleInput.length; i++)
+				angleInput[i] -= errorDerivative[i] * dt;
+		}
+	}
+	
 	
 	/* Update sample counter to allow for calibration */
 	private void updateSampleCounter() {
@@ -175,5 +186,8 @@ public class SensorRecordingService extends Service implements SensorEventListen
 	public float[] gyroData;
 	public float[] angleData;
 	private long previousTimestamp;
+	private float[] previousError;
+	private float[] errorDerivative;
+	private boolean calibrated;
 	private int state;
 }
