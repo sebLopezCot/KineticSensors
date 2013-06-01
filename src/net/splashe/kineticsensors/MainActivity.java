@@ -88,9 +88,16 @@ public class MainActivity extends Activity {
 								@Override
 								public void run()
 								{
+									// UI update loop
+									// Update accelerometer values
 									xAccelTextView.setText("x: " + Float.toString(sensorRecordingService.accelData[0]));
 									yAccelTextView.setText("y: " + Float.toString(sensorRecordingService.accelData[1]));
 									zAccelTextView.setText("z: " + Float.toString(sensorRecordingService.accelData[2]));
+									
+									// Update gyro values
+									xGyroTextView.setText("x: " + Float.toString(sensorRecordingService.gyroData[0]));
+									yGyroTextView.setText("y: " + Float.toString(sensorRecordingService.gyroData[1]));
+									zGyroTextView.setText("z: " + Float.toString(sensorRecordingService.gyroData[2]));
 								}
 							}); // end run
 							try 
