@@ -2,15 +2,18 @@ package net.splashe.kineticsensors.util;
 
 public class SensorHelper {
 
-	static final double GYRO_NOISE_LIMIT = 0.06;
+	// Nanoseconds to seconds conversion factor
+	public static final float NS2S = 1.0f / 1000000000.0f;
+		
+	public static final double GYRO_NOISE_LIMIT = 0.06;
 	public static final int X_IDX = 0;
 	public static final int Y_IDX = 1;
 	public static final int Z_IDX = 2;
 	
 	/* Return a value that cancels out gyro noise */
 	public static double gyroNoiseLimiter(double gyroValue){
-		if(Math.abs(gyroValue) < GYRO_NOISE_LIMIT)
-			gyroValue = 0.0;
+//		if(Math.abs(gyroValue) < GYRO_NOISE_LIMIT)
+//			gyroValue = 0.0;
 		return gyroValue;
 	}
 	
@@ -100,4 +103,16 @@ public class SensorHelper {
 		return rotatedDiff;
 	}
 	
+	public static double pythag(double x, double y, double z){
+		return Math.sqrt(x*x + y*y + z*z);
+	}
+
+	public static double boundTo360Degrees(double angle){
+		if(angle >= 360.0){
+			angle -= 360.0 * ((int)angle / 360);
+		} else if (angle < 0.0){
+			angle = 360.0 - angle;
+		}
+		return angle;
+	}
 }

@@ -89,15 +89,7 @@ public class MainActivity extends Activity {
 								public void run()
 								{
 									// UI update loop
-									// Update accelerometer values
-									xAccelTextView.setText("x: " + Float.toString(sensorRecordingService.accelData[0]));
-									yAccelTextView.setText("y: " + Float.toString(sensorRecordingService.accelData[1]));
-									zAccelTextView.setText("z: " + Float.toString(sensorRecordingService.accelData[2]));
-									
-									// Update gyro values
-									xGyroTextView.setText("x: " + Float.toString(sensorRecordingService.gyroData[0]));
-									yGyroTextView.setText("y: " + Float.toString(sensorRecordingService.gyroData[1]));
-									zGyroTextView.setText("z: " + Float.toString(sensorRecordingService.gyroData[2]));
+									updateUI();
 								}
 							}); // end run
 							try 
@@ -114,6 +106,19 @@ public class MainActivity extends Activity {
 				Log.d(TAG, "Service Connected");
 			}
 		};  // end service connection
+	}
+	
+	
+	private void updateUI() {
+		// Update accelerometer values
+		xAccelTextView.setText("x: " + Float.toString(sensorRecordingService.accelData[0]));
+		yAccelTextView.setText("y: " + Float.toString(sensorRecordingService.accelData[1]));
+		zAccelTextView.setText("z: " + Float.toString(sensorRecordingService.accelData[2]));
+		
+		// Update gyro values
+		xGyroTextView.setText("x: " + Float.toString(sensorRecordingService.angleData[0]));
+		yGyroTextView.setText("y: " + Float.toString(sensorRecordingService.angleData[1]));
+		zGyroTextView.setText("z: " + Float.toString(sensorRecordingService.angleData[2]));
 	}
 	
 	private void setRecording(boolean isRecording)
@@ -146,6 +151,7 @@ public class MainActivity extends Activity {
 			safelyUnbind();
 		}
 	}
+
 
 	@Override
 	protected void onStart() {

@@ -15,7 +15,7 @@ import static net.splashe.kineticsensors.util.SensorHelper.*;
 
 
 public class SensorRecordingService extends Service implements SensorEventListener {
-
+	
 	public static final int ENGINESTATE_IDLE = 0;
 	public static final int ENGINESTATE_CALIBRATING = 1;
 	public static final int ENGINESTATE_MEASURING = 2;
@@ -43,8 +43,7 @@ public class SensorRecordingService extends Service implements SensorEventListen
 		// Initialize the sensors
 		accelData = new float[3];
 		gyroData = new float[3];
-		for(int i=0; i < accelData.length; i++) accelData[i] = 0.0f;
-		for(int i=0; i < gyroData.length; i++) gyroData[i] = 0.0f;
+		angleData = new float[3];
 		
 		sensorMgr = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		accelSensor = sensorMgr.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -80,8 +79,7 @@ public class SensorRecordingService extends Service implements SensorEventListen
 			break;
 			
 		case SENSORTYPE_GYRO:
-			for(int i=0; i < gyroData.length; i++)
-				gyroData[i] = event.values[i];
+			updateAngleData(event);
 			break;
 		default:
 			break;
@@ -107,6 +105,28 @@ public class SensorRecordingService extends Service implements SensorEventListen
 		{
 			return SENSORTYPE_NA;
 		}
+	}
+	
+	private void updateAngleData(SensorEvent event){
+		if (previousTimestamp >= 0L) {
+			// Get the change in time to use for integration
+			float dt = (float)(event.timestamp - previousTimestamp) * NS2S;
+
+			float[] gyroInput = new float[3];
+			for(int i=0; i < angleData.length; i++){
+				// Remove noise from samples
+				gyroInput[i] = (float) gyroNoiseLimiter(event.values[i]);
+				
+				// Add the change in angle to angleData by integrating
+				angleData[i] += (float) Math.toDegrees(gyroInput[i] * dt);
+				
+				// Bound the angle to 360 degrees
+				angleData[i] = (float) boundTo360Degrees(angleData[i]);
+			}
+		}
+		
+		// Update timestamp
+		previousTimestamp = event.timestamp;
 	}
 	
 	/* Update sample counter to allow for calibration */
@@ -153,5 +173,7 @@ public class SensorRecordingService extends Service implements SensorEventListen
 	/* Sensor data variables and arrays */
 	public float[] accelData;
 	public float[] gyroData;
+	public float[] angleData;
+	private long previousTimestamp;
 	private int state;
 }
