@@ -1,0 +1,179 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/background"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".MainActivity"
+    tools:ignore="HardcodedText" >
+
+    <TableLayout
+        android:id="@+id/tableLayout1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/recordToggle"
+        android:layout_marginTop="10dp"
+        android:paddingLeft="12dp" >
+
+        <TableRow
+            android:id="@+id/heading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Accelerometer"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textStyle="bold" />
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="5dp" >
+
+            <TextView
+                android:id="@+id/xAccelTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Large Text"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/XAxisColor"
+                android:textSize="@dimen/SensorInputFontSize" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="7dp" >
+
+            <TextView
+                android:id="@+id/yAccelTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Large Text"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/YAxisColor"
+                android:textSize="@dimen/SensorInputFontSize" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="7dp" >
+
+            <TextView
+                android:id="@+id/zAccelTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Large Text"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/ZAxisColor"
+                android:textSize="@dimen/SensorInputFontSize" />
+        </TableRow>
+
+    </TableLayout>
+
+    <TextView
+        android:id="@+id/recordStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/tableLayout1"
+        android:layout_alignParentTop="true"
+        android:paddingRight="10dp"
+        android:text="Record"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="35sp" />
+
+    <ToggleButton
+        android:id="@+id/recordToggle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/recordStatus"
+        android:layout_alignRight="@+id/tableLayout1"
+        android:layout_toRightOf="@+id/recordStatus" />
+
+    <TableLayout
+        android:id="@+id/tableLayout2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/tableLayout1"
+        android:layout_below="@+id/tableLayout1"
+        android:layout_marginTop="28dp"
+        android:paddingLeft="12dp" >
+
+        <TableRow
+            android:id="@+id/TableRow04"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/TextView04"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Gyroscope"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textStyle="bold" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/TableRow02"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="5dp" >
+
+            <TextView
+                android:id="@+id/xGyroTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Large Text"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/XAxisColor"
+                android:textSize="@dimen/SensorInputFontSize" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/TableRow01"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="7dp" >
+
+            <TextView
+                android:id="@+id/yGyroTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Large Text"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/YAxisColor"
+                android:textSize="@dimen/SensorInputFontSize" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/TableRow03"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="7dp" >
+
+            <TextView
+                android:id="@+id/zGyroTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Large Text"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/ZAxisColor"
+                android:textSize="@dimen/SensorInputFontSize" />
+        </TableRow>
+    </TableLayout>
+
+</RelativeLayout>
