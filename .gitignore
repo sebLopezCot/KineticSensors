@@ -15,5 +15,5 @@ gen/
 # Local configuration file (sdk path, etc)
 local.properties
 
-# Misc
-/Thumbs.db
+# OS Generated files
+Thumbs.db
