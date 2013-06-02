@@ -51,7 +51,7 @@ public class SensorRecordingService extends Service implements SensorEventListen
 		
 		// Register sensor event listener
 		sensorMgr.registerListener(this, accelSensor, SensorManager.SENSOR_DELAY_UI);
-		sensorMgr.registerListener(this, gyroSensor, SensorManager.SENSOR_DELAY_UI);
+		sensorMgr.registerListener(this, gyroSensor, SensorManager.SENSOR_DELAY_FASTEST);
 	}
 	
 	@Override

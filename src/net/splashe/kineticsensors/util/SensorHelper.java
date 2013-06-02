@@ -12,8 +12,8 @@ public class SensorHelper {
 	
 	/* Return a value that cancels out gyro noise */
 	public static double gyroNoiseLimiter(double gyroValue){
-//		if(Math.abs(gyroValue) < GYRO_NOISE_LIMIT)
-//			gyroValue = 0.0;
+		if(Math.abs(gyroValue) < GYRO_NOISE_LIMIT)
+			gyroValue = 0.0;
 		return gyroValue;
 	}
 	
