@@ -1,5 +1,14 @@
 package net.splashe.kineticsensors;
 
+import static net.splashe.kineticsensors.util.SensorHelper.NS2S;
+import static net.splashe.kineticsensors.util.SensorHelper.boundTo360Degrees;
+import static net.splashe.kineticsensors.util.SensorHelper.gyroNoiseLimiter;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -8,10 +17,9 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Binder;
+import android.os.Environment;
 import android.os.IBinder;
 import android.util.Log;
-
-import static net.splashe.kineticsensors.util.SensorHelper.*;
 
 
 public class SensorRecordingService extends Service implements SensorEventListener {
@@ -22,6 +30,8 @@ public class SensorRecordingService extends Service implements SensorEventListen
 	public static final int SENSORTYPE_NA = 0;
 	public static final int SENSORTYPE_ACCEL = 1;
 	public static final int SENSORTYPE_GYRO = 0;
+	
+	public static final boolean DEBUG = true; // DEBUG FLAG
 	
 	IBinder mBinder;
 	SensorManager sensorMgr;
@@ -52,6 +62,19 @@ public class SensorRecordingService extends Service implements SensorEventListen
 		// Register sensor event listener
 		sensorMgr.registerListener(this, accelSensor, SensorManager.SENSOR_DELAY_UI);
 		sensorMgr.registerListener(this, gyroSensor, SensorManager.SENSOR_DELAY_UI);
+		
+		// Sampling csv recording
+		captureFile = null;
+      	if( DEBUG ) {
+      		File captureFileName = new File( 
+      				Environment.getExternalStorageDirectory(), 
+      				"capture.csv" );
+      		try {
+      			captureFile = new PrintWriter( new FileWriter( captureFileName, false ) );
+      		} catch( IOException ex ) {
+      			Log.e( MainActivity.TAG, ex.getMessage(), ex );
+      		}
+      	}
 	}
 	
 	@Override
@@ -66,6 +89,8 @@ public class SensorRecordingService extends Service implements SensorEventListen
 		// Unregister sensor event listener
 		sensorMgr.unregisterListener(this);
 		Log.d(MainActivity.TAG, "Listener Unregistered");
+		
+		cutOffCSV();
 	}
 	
 	@Override
@@ -80,10 +105,12 @@ public class SensorRecordingService extends Service implements SensorEventListen
 			
 		case SENSORTYPE_GYRO:
 			updateAngleData(event);
+			updateCSV(event.timestamp * NS2S, angleData);
 			break;
 		default:
 			break;
 		}
+		
 	}
 	
 
@@ -127,6 +154,22 @@ public class SensorRecordingService extends Service implements SensorEventListen
 		
 		// Update timestamp
 		previousTimestamp = event.timestamp;
+	}
+	
+	private void updateCSV(float timestamp, float[] vals){
+		if(vals.length >= 3 && captureFile != null){
+			captureFile.print(timestamp);
+			for(int i=0; i < vals.length; i++)
+				captureFile.print(", " + vals[i]);
+			captureFile.println();
+		}
+	}
+	
+	private void cutOffCSV(){
+		if(captureFile != null){
+			captureFile.close();
+			captureFile = null;
+		}
 	}
 	
 	/* Update sample counter to allow for calibration */
@@ -176,4 +219,6 @@ public class SensorRecordingService extends Service implements SensorEventListen
 	public float[] angleData;
 	private long previousTimestamp;
 	private int state;
+	private PrintWriter captureFile;
+	
 }
