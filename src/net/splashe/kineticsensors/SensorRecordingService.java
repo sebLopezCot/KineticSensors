@@ -63,7 +63,7 @@ public class SensorRecordingService extends Service implements SensorEventListen
 		sensorMgr.registerListener(this, accelSensor, SensorManager.SENSOR_DELAY_UI);
 		sensorMgr.registerListener(this, gyroSensor, SensorManager.SENSOR_DELAY_UI);
 		
-		// Sampling csv recording
+		// Setup sample recording CSV file
 		captureFile = null;
       	if( DEBUG ) {
       		File captureFileName = new File( 
@@ -71,6 +71,8 @@ public class SensorRecordingService extends Service implements SensorEventListen
       				"capture.csv" );
       		try {
       			captureFile = new PrintWriter( new FileWriter( captureFileName, false ) );
+      			// Print the column headers
+      			captureFile.println("Time,Pitch (x),Yaw (y),Roll (z)");
       		} catch( IOException ex ) {
       			Log.e( MainActivity.TAG, ex.getMessage(), ex );
       		}
@@ -147,8 +149,10 @@ public class SensorRecordingService extends Service implements SensorEventListen
 				// Add the change in angle to angleData by integrating
 				angleData[i] += (float) Math.toDegrees(gyroInput[i] * dt);
 				
-				// Bound the angle to 360 degrees
-				angleData[i] = (float) boundTo360Degrees(angleData[i]);
+				if(!DEBUG){
+					// Bound the angle to 360 degrees
+					angleData[i] = (float) boundTo360Degrees(angleData[i]);
+				}
 			}
 		}
 		
@@ -158,7 +162,10 @@ public class SensorRecordingService extends Service implements SensorEventListen
 	
 	private void updateCSV(float timestamp, float[] vals){
 		if(vals.length >= 3 && captureFile != null){
-			captureFile.print(timestamp);
+			if(initialSampleTimestamp == 0.0f){
+				initialSampleTimestamp = timestamp;
+			}
+			captureFile.print(timestamp - initialSampleTimestamp);
 			for(int i=0; i < vals.length; i++)
 				captureFile.print(", " + vals[i]);
 			captureFile.println();
@@ -220,5 +227,6 @@ public class SensorRecordingService extends Service implements SensorEventListen
 	private long previousTimestamp;
 	private int state;
 	private PrintWriter captureFile;
+	private float initialSampleTimestamp;
 	
 }
